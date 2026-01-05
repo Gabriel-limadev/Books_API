@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlmodel import Session
-from models.book import Book
-from repositories.book_repository import BookRepository
+from app.models.book import Book
+from app.repositories.book_repository import BookRepository
 
 class BookService:
     def __init__(self):

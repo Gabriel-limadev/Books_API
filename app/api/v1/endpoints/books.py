@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from typing import List
 
-from db.session import get_session
-from services.book_service import BookService
-from schemas.book import BookResponse
+from app.db.session import get_session
+from app.services.book_service import BookService
+from app.schemas.book import BookResponse
 
 router = APIRouter()
 service = BookService()

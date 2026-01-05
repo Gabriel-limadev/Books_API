@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 
-from db.session import get_session
-from services.health_service import HealthService
+from app.db.session import get_session
+from app.services.health_service import HealthService
 
 router = APIRouter()
 service = HealthService()

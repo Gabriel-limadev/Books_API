@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from api.v1.endpoints import books, categories, health
+from app.api.v1.endpoints import books, categories, health
 
 router = APIRouter()
 router.include_router(books.router, prefix='/books', tags=['Books'])
