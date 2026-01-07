@@ -53,6 +53,36 @@ class BookService:
 
         return books
     
+    def list_books_top_rated(
+            self,
+            session: Session,
+            top_n: int | None = None # Valor padrão None caso não seja passado esse parametro na url 
+        ) -> list[Book]:
+        '''
+        Retorna os livros com maiores ratings
+        Pode ser passado como parametro o numero de livros desejados
+        '''
+        books = self.repository.get_top_rated(session, top_n)
+        return books
+    
+    def list_books_by_price_range(
+            self,
+            session: Session, 
+            min_price: float, 
+            max_price: float
+        ) -> list[Book]:
+        '''
+        Retorna os livros filtrados com um range de preços
+        '''
+        if min_price > max_price:
+            raise HTTPException(
+                status_code=400,
+                detail='min_price cannot be greater than max_price'
+            )
+            
+        books = self.repository.get_book_by_price_range(session, min_price, max_price)
+        return books
+    
     def list_all_categories(
             self,
             session: Session

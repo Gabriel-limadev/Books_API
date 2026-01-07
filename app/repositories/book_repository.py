@@ -1,4 +1,4 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 from app.models.book import Book
 
 class BookRepository:
@@ -44,6 +44,31 @@ class BookRepository:
         # Retorna todo o resultado
         return session.exec(statement).all()
     
+    # Metodo para listar os livros com as melhores avaliações
+    def get_top_rated(
+            self, 
+            session: Session,
+            top_n: int | None = None
+    ) -> list[Book]:
+        
+        statement = select(Book).order_by(Book.rating.desc())
+        
+        # Caso seja passado o limite desejado
+        if top_n is not None:
+            statement = statement.limit(top_n)
+
+        return session.exec(statement).all()
+    
+    # Metodo para listar os livros filtrados de acordo com um range de preço
+    def get_book_by_price_range(
+            self, 
+            session: Session,
+            min_price: float,
+            max_price: float
+    ) -> list[Book]:
+        statement = select(Book).where(Book.price >= min_price).where(Book.price <= max_price)
+        return session.exec(statement).all()
+
     # Metodo para capturar todas as categorias
     def get_all_categories(
             self,
@@ -51,3 +76,45 @@ class BookRepository:
         ) -> list[str]:
         statement = select(Book.category).distinct()
         return session.exec(statement).all()
+    
+    # Metodo para capturar as estatisticas gerais dos livros
+    def get_stats_overview(
+            self,
+            session: Session
+        ) -> list[dict]:
+        books_stmt = select(func.count(Book.id).label('total_livros'), func.avg(Book.price).label('preco_medio'))
+        total_livros, preco_medio = session.exec(books_stmt).one()
+        ratings_distribuition = select(Book.rating, func.count(Book.rating).label('quantidade')).group_by(Book.rating).order_by(Book.rating)
+        ratings_result = session.exec(ratings_distribuition).all()
+
+        return {
+            'total_livros': total_livros,
+            'preco_medio': float(preco_medio) if preco_medio else 0.0,
+            'distribuicao_ratings': [
+                {
+                    'rating': rating,
+                    'quantidade': quantidade
+                }
+                for rating, quantidade in ratings_result
+            ]
+        }
+            
+    # Metodo para capturar as estatisticas gerais dos livros detalhadas pelas categorias
+    def get_stats_categories(
+            self,
+            session: Session
+        ) -> list[dict]:
+        statement = select(
+                            Book.category, 
+                            func.count(Book.id).label('total_livros'),
+                            func.avg(Book.price).label('preco_medio')
+                          ).group_by(Book.category)
+        result = session.exec(statement).all()
+        return [
+            {
+                'category': category,
+                'total_livros': total_livros,
+                'preco_medio': float(preco_medio) if preco_medio else 0.0
+            }
+            for category, total_livros, preco_medio in result
+        ]
