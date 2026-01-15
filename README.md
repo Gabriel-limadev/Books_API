@@ -16,6 +16,7 @@ Status da API: https://books-api-j70z.onrender.com/api/v1/health
 
 ## 🚀 Funcionalidades
 
+- 📖 Scraping de livros
 - 📖 Listar todos os livros
 - 🔎 Buscar livro por ID
 - 🏷️ Filtrar livros por título e/ou categoria
@@ -37,7 +38,7 @@ Books_API/
 ├── app/
 │   ├── api/                 # Rotas da API
 │   │   └── v1/
-│   │       ├── endpoints/   # Endpoints (books, categories, health)
+│   │       ├── endpoints/   # Endpoints (auth, books, categories, health, scraping, stats)
 │   │       └── router.py    # Router principal
 │   │
 │   ├── core/
@@ -65,11 +66,12 @@ Books_API/
 │   |   └── auth_service.py
 |   |   └── book_service.py
 |   |   └── health_service.py
+|   |   └── scraping_service.py
 |   |   └── stats_service.py
 │   |
 |   ├── scraper/             # 🕷️ Coleta de dados
-│       └── book_scraper.py
-|       └── parser.py
+│   |   └── book_scraper.py
+|   |   └── parser.py
 |
 ├── main.py                  # Inicialização da API
 ├── pyproject.toml
@@ -87,6 +89,7 @@ Books_API/
 | GET | `/api/v1/health` | Verifica se a API está ativa |
 | POST | `/api/v1/auth/register` | Responsavel pelo cadastro do usuario |
 | POST | `/api/v1/auth/login` | Responsavel pelo login do usuario |
+| POST | `/api/v1/scraping` | Realiza o scraping e atualiza o banco |
 | GET | `/api/v1/books` | Lista todos os livros | 
 | GET | `/api/v1/books/{id}` | Busca livro por ID |
 | GET | `/api/v1/books/search` | Busca livros por título e/ou categoria |
@@ -189,6 +192,20 @@ POST /api/v1/auth/login
     "access_token": str
     "refresh_token": str,
     "token_type": "bearer"
+}
+```
+
+### 🔹 Realizar Scraping
+**Request**
+```http
+POST /api/v1/auth/scraping
+```
+**Response**
+```code
+{
+    "total": int
+    "inserted": int,
+    "updated": int
 }
 ```
 
@@ -376,33 +393,8 @@ O site utilizado como fonte dos dados foi:
 ### 📦 Banco de dados (`books.db`)
 
 Para facilitar o uso da API e a avaliação do projeto, o arquivo **`books.db` já está incluído no repositório**.  
-Dessa forma, a API pode ser executada imediatamente, sem a necessidade de rodar o scraper.
-
-Essa decisão foi tomada para:
-- Simplificar a execução do projeto
-- Evitar dependências de scraping durante a execução da API
-- Garantir que os dados estejam disponíveis desde o início
-
-O scraper permanece disponível no repositório apenas como etapa opcional de coleta e atualização dos dados.
-
----
-
-### ▶️ Executando o scraper manualmente
-
-Caso queira **analisar o scraper** basta:
-
-1. Clonar o repositório:
-   ```bash
-   git clone https://github.com/Gabriel-limadev/Books_API.git
-   cd Books_API/app/scraper
-   
-2. Instalar dependências:
-   ```bash
-   pip install -r requirements.txt
-
-3. Executar scraper
-   ```bash
-   python parser.py
+Dessa forma, a API pode ser executada imediatamente, sem a necessidade de rodar o scraper pela rota.
+Porém caso queira fazer o scraper, utilize a rota api/v1//scraping para atualizar a tabela
 
 ---
 
