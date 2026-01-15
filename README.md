@@ -426,7 +426,7 @@ O fluxo de dados do sistema inicia na coleta de informações a partir do site *
 A API desenvolvida com **FastAPI** é responsável por expor esses dados por meio de endpoints REST, utilizando autenticação **JWT** para controle de acesso. A API pode ser consumida por aplicações externas ou ferramentas de teste de API, como Postman e Swagger.
 
 <p align="center">
-  <img width="1100" height="850" alt="Pipeline" src="https://github.com/user-attachments/assets/a086a197-f6d3-4db7-b8ce-00572e37bf3f" />
+  <img width="900" height="650" alt="Pipeline" src="https://github.com/user-attachments/assets/389fc3d1-bf64-4373-bc38-23848df1af0e" />
 </p>
 
 ---
