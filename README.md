@@ -5,6 +5,13 @@ O projeto foi desenvolvido como **1° trabalho na Pós em Engenharia de Machine 
 
 ---
 
+## ▶️ Video Apresentação
+``` code
+https://youtu.be/Wb60WbYF2ds
+``` 
+
+---
+
 ## 🌐 API em Produção
 ``` code
 Rota inicial:  https://books-api-j70z.onrender.com/api/v1
